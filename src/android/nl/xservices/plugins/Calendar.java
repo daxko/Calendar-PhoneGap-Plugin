@@ -350,19 +350,12 @@ public class Calendar extends CordovaPlugin {
           final boolean isAllDayEvent = AbstractCalendarAccessor.isAllDayEvent(new Date(jsonFilter.optLong("startTime")), new Date(jsonFilter.optLong("endTime")));
           final Intent calIntent = new Intent(Intent.ACTION_EDIT)
               .setType("vnd.android.cursor.item/event")
-              .putExtra("title", getPossibleNullString("title", jsonFilter))
-              .putExtra("hasAlarm", 1);
-          if(isAllDayEvent){
-            calIntent
-                .putExtra("allDay", isAllDayEvent)
-                .putExtra("beginTime", jsonFilter.optLong("startTime") + TimeZone.getDefault().getOffset(jsonFilter.optLong("startTime")))
-                .putExtra("endTime", jsonFilter.optLong("endTime") + TimeZone.getDefault().getOffset(jsonFilter.optLong("endTime")))
-                .putExtra("eventTimezone", "TIMEZONE_UTC");
-          } else {
-            calIntent
-                .putExtra("beginTime", jsonFilter.optLong("startTime"))
-                .putExtra("endTime", jsonFilter.optLong("endTime"));
-          }
+              .putExtra(Events.TITLE, getPossibleNullString("title", jsonFilter))
+              .putExtra("hasAlarm", 1)
+              .putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, isAllDayEvent)
+              .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, jsonFilter.optLong("startTime"))
+              .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, jsonFilter.optLong("endTime"))
+              .putExtra(Events.EVENT_TIMEZONE, TimeZone.getDefault().getID());
 
           // TODO can we pass a reminder here?
 
